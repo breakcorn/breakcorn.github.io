@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BREAKCORN | Generative audio streams</title>
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/reseter.css/2.0.0/reseter.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet" type="text/css" />
+  <link href="https://fonts.cdnfonts.com/css/pixel-calculon" rel="stylesheet" />
+  <link href="https://fonts.cdnfonts.com/css/computo-monospace" rel="stylesheet" />
+  <link href="https://fonts.cdnfonts.com/css/twobit" rel="stylesheet" />
+  <link href="https://fonts.cdnfonts.com/css/nonfiction" rel="stylesheet" />
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" type="text/css" media="screen" href="./assets/audio-player.css" />
+  <script src="./assets/audio-player.js"></script>
+
+  <link rel="stylesheet" href="./assets/styles.css" />
+</head>
+
+<body>
+  <div class="container">
+    <div class="glitch" data-text="BREAKCORN">BREAKCORN</div>
+    <div class="glow">BREAKCORN</div>
+    <p class="subtitle">GENERATIVE AUDIO STREAMS</p>
+    <!-- <figure>
+      <figcaption>Listen to the T-Rex:</figcaption>
+      <audio controls src="https://stream.breakcorn.ru/all"></audio>
+      <a href="https://stream.breakcorn.ru/all"> Download audio </a>
+    </figure> -->
+
+  </div>
+  <div class="scanlines">
+  </div>
+  <audio>
+    <source src="https://audio-edge-ey5nr.ams.s.radiomast.io/df356c3b-aa44-4423-8f50-7c14d17aa450" type="audio/mpeg">
+    <source src="https://stream.breakcorn.ru/all" type="audio/mpeg">
+    <!-- <source src="sound.ogg" type="audio/ogg"> -->
+    Sadly, your browser doesn't support audio playback :(
+  </audio>
+
+  <div class="audio-player" style="z-index: 100;">
+    <div class="audio-player-back-ring"></div>
+    <div class="audio-player-back-ring-center"></div>
+
+    <div class="audio-player-progress-ring">
+      <!-- <div class="audio-player-progress-segment audio-player-progress-segment-1" style="display: none;"></div> -->
+      <!-- <div class="audio-player-progress-segment audio-player-progress-segment-2" style="display: none;"></div> -->
+      <!-- <div class="audio-player-progress-segment audio-player-progress-segment-3" style="display: none;"></div> -->
+      <!-- <div class="audio-player-progress-segment audio-player-progress-segment-4" style="display: none;"></div> -->
+      <div class="audio-player-progress-ring-center"></div>
+    </div>
+    
+    <div class="audio-player-controls">
+      <img src="./assets/Play-Icon.svg" alt="Tastatur-Demo abspielen" class="audio-player-button">
+    </div>
+  </div>
+  <!-- <p class="audio-player-text">Listen!</p> -->
+  <div id="app"></div>
+  <script src="https://unpkg.com/webamp"></script>
+  <script>
+    #const app = document.getElementById("app")
+    #const webamp = new Webamp();
+    #webamp.renderWhenReady(app);
+  </script>
+</body>
+
+</html>
