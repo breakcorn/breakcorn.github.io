@@ -12,12 +12,12 @@ $( document ).ready(function() {
             audioIsPlaying = true;
             checkPlayerStatus();
 
-            $(".audio-player-button").attr("src", "/assets/Pause-Icon.svg");
+            $(".audio-player-button").attr("src", "./assets/Pause-Icon.svg");
         } else {
             player.pause();
             audioIsPlaying = false;
 
-            $(".audio-player-button").attr("src", "/assets/Play-Icon.svg");
+            $(".audio-player-button").attr("src", "./assets/Play-Icon.svg");
         }
     });
 
@@ -36,7 +36,7 @@ $( document ).ready(function() {
             audioIsPlaying = true;
             checkPlayerStatus();
 
-            $(".audio-player-button").attr("src", "/assets/Pause-Icon.svg");
+            $(".audio-player-button").attr("src", "./assets/Pause-Icon.svg");
         }
     });
 
@@ -48,7 +48,7 @@ $( document ).ready(function() {
             audioIsPlaying = false;
             updateProgressUI();
 
-            $(".audio-player-button").attr("src", "/assets/Play-Icon.svg");
+            $(".audio-player-button").attr("src", "./assets/Play-Icon.svg");
 
             $(".audio-player-progress-segment-1").css("display", "none");
             $(".audio-player-progress-segment-2").css("display", "none");
