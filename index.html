@@ -1,70 +1,370 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BREAKCORN | Broadcast Stream Client Web Application</title>
+  <meta name="description" content="Breakcore / Digital Hardcore / IDM / Noise / Industrial" />
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>BREAKCORN | Generative audio streams</title>
+  <!-- <link href="//fonts.googleapis.com/css?family=Oswald" rel="stylesheet" type="text/css" /> -->
+  <link href="//fonts.cdnfonts.com/css/pixel-calculon" rel="stylesheet" />
+  <link href="//fonts.cdnfonts.com/css/nonfiction" rel="stylesheet" />
 
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/reseter.css/2.0.0/reseter.min.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet" type="text/css" />
-  <link href="https://fonts.cdnfonts.com/css/pixel-calculon" rel="stylesheet" />
-  <link href="https://fonts.cdnfonts.com/css/computo-monospace" rel="stylesheet" />
-  <link href="https://fonts.cdnfonts.com/css/twobit" rel="stylesheet" />
-  <link href="https://fonts.cdnfonts.com/css/nonfiction" rel="stylesheet" />
-
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-  <link rel="stylesheet" type="text/css" media="screen" href="./assets/audio-player.css" />
-  <script src="./assets/audio-player.js"></script>
-
-  <link rel="stylesheet" href="./assets/styles.css" />
+  <link rel="stylesheet" type="text/css" href="./static/css/reset.min.css" />
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css" />
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <link rel="stylesheet" href="./static/css/main.css" />
 </head>
-
 <body>
-  <div class="container">
+
+<audio crossorigin="anonymous" id="player"><!-- autoplay="autoplay" https://qna.habr.com/q/1318536 -->
+  <source src="https://audio-edge-kef8b.ams.s.radiomast.io/0096c4fc-e4c2-4bdc-bce7-0419448040a8" type="audio/mpeg">
+  <source src="https://stream.breakcorn.ru/main" type="audio/mpeg">
+</audio>
+
+<div id="BG_FIXED" style="display: none;">
+  <canvas id="canvas" style="width: 100vw; height: 100vh;"></canvas>
+<div class="wrapper">
+  <div class="triangle-wrap">
+      <div class="triangle triangle--main"></div>
+      <div class="triangle triangle--1"></div>
+      <div class="triangle triangle--2"></div>
+      <div class="triangle triangle--3"></div>
+    <div class="triangle__text" data-text=""></div>
+  </div>
+</div>
+  <div class="logo-container">
     <div class="glitch" data-text="BREAKCORN">BREAKCORN</div>
-    <div class="glow">BREAKCORN</div>
+    <!-- <div class="glow">BREAKCORN</div> -->
     <p class="subtitle">GENERATIVE AUDIO STREAMS</p>
-    <!-- <figure>
-      <figcaption>Listen to the T-Rex:</figcaption>
-      <audio controls src="https://stream.breakcorn.ru/all"></audio>
-      <a href="https://stream.breakcorn.ru/all"> Download audio </a>
-    </figure> -->
-
   </div>
-  <div class="scanlines">
-  </div>
-  <audio>
-    <source src="https://audio-edge-kef8b.ams.s.radiomast.io/0096c4fc-e4c2-4bdc-bce7-0419448040a8" type="audio/mpeg">
-    <source src="https://stream.breakcorn.ru/main" type="audio/mpeg">
-    <!-- <source src="sound.ogg" type="audio/ogg"> -->
-    Sadly, your browser doesn't support audio playback :(
-  </audio>
+  <div class="scanlines"></div>
+</div>
 
-  <div class="audio-player" style="z-index: 100;">
-    <div class="audio-player-back-ring"></div>
-    <div class="audio-player-back-ring-center"></div>
-
-    <div class="audio-player-progress-ring">
-      <!-- <div class="audio-player-progress-segment audio-player-progress-segment-1" style="display: none;"></div> -->
-      <!-- <div class="audio-player-progress-segment audio-player-progress-segment-2" style="display: none;"></div> -->
-      <!-- <div class="audio-player-progress-segment audio-player-progress-segment-3" style="display: none;"></div> -->
-      <!-- <div class="audio-player-progress-segment audio-player-progress-segment-4" style="display: none;"></div> -->
-      <div class="audio-player-progress-ring-center"></div>
-    </div>
-    
-    <div class="audio-player-controls">
-      <img src="./assets/Play-Icon.svg" alt="Tastatur-Demo abspielen" class="audio-player-button">
+<!-- Following Menu -->
+<div class="ui large top fixed hidden menu">
+  <div class="ui container">
+    <!-- <a class="active item">Home</a> -->
+    <!-- <a class="item">Work</a> -->
+    <!-- <a class="item">Company</a> -->
+    <!-- <a class="item">Careers</a> -->
+    <a class="item" onclick="$('.ui.modal.preferencies').modal('show');">Preferencies</a>
+    <a class="item" href="#disqus_thread">Comments</a>
+    <div class="right menu">
+      <div class="item">
+        <a class="ui button" onclick="$('.ui.modal.comingSoon').modal('show');">Log in</a>
+      </div>
+      <div class="item">
+        <a class="ui primary button" onclick="$('.ui.modal.comingSoon').modal('show');">Sign Up</a>
+      </div>
     </div>
   </div>
-  <!-- <p class="audio-player-text">Listen!</p> -->
-  <div id="app"></div>
-  <script src="https://unpkg.com/webamp"></script>
-  <script>
-    #const app = document.getElementById("app")
-    #const webamp = new Webamp();
-    #webamp.renderWhenReady(app);
-  </script>
-</body>
+</div>
 
-</html>
+<div class="ui vertical inverted sidebar menu">
+  <a class="active item">Home</a>
+  <a class="item">Work</a>
+  <a class="item">Company</a>
+  <a class="item">Careers</a>
+  <a class="item">Login</a>
+  <a class="item">Signup</a>
+</div>
+
+<main class="pusher" style="background: none;">
+  <header id="HEADER" class="ui inverted vertical masthead center aligned segment" style="background: none !important; background-color: none !important; width: 100vw; height: 100vh;">
+    <div class="ui container">
+      <div class="ui large secondary inverted pointing menu">
+        <a class="toc item">
+          <i class="sidebar icon"></i>
+        </a>
+        <!-- <a class="active item">Home</a> -->
+        <!-- <a class="item">Work</a> -->
+        <!-- <a class="item">Company</a> -->
+        <!-- <a class="item">Careers</a> -->
+        <div class="item">
+          <a class="ui inverted button" onclick="$('.ui.modal.preferencies').modal('show');">Preferencies</a>
+        </div>
+        <div class="item">
+          <a class="ui inverted button" href="#disqus_thread">Comments</a>
+        </div>
+        <div class="right item">
+          <a class="ui button" onclick="$('.ui.modal.comingSoon').modal('show');">Log in</a>
+          <a class="ui inverted button" onclick="$('.ui.modal.comingSoon').modal('show');">Sign Up</a>
+        </div>
+      </div>
+    </div>
+    <div class="ui text container">
+      <!-- <h1 class="ui inverted header">Imagine-a-Company</h1> -->
+      <!-- <h2>Do whatever you want when you want to.</h2> -->
+      <div class="audio-player" style="z-index: 100; display: none;">
+        <div class="audio-player-back-ring-center"></div>
+        <div class="audio-player-controls">
+          <img src="./static/Play-Icon.svg" alt="Tastatur-Demo abspielen" class="audio-player-button">
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- <section class="ui vertical stripe segment">
+    <div class="ui middle aligned stackable grid container">
+      <div class="row">
+        <div class="eight wide column">
+          <h3 class="ui header">We Help Companies and Companions</h3>
+          <p>We can give your company superpowers to do things that they never thought possible. Let us delight your customers and empower your needs...through pure data analytics.</p>
+          <h3 class="ui header">We Make Bananas That Can Dance</h3>
+          <p>Yes that's right, you thought it was the stuff of dreams, but even bananas can be bioengineered.</p>
+        </div>
+        <div class="six wide right floated column">
+          <img src="static/images/wireframe/white-image.png" class="ui large bordered rounded image">
+        </div>
+      </div>
+      <div class="row">
+        <div class="center aligned column">
+          <a class="ui huge button">Check Them Out</a>
+        </div>
+      </div>
+    </div>
+  </section> -->
+
+  <!-- <section class="ui vertical stripe quote segment">
+    <div class="ui equal width stackable internally celled grid">
+      <div class="center aligned row">
+        <div class="column">
+          <h3>"What a Company"</h3>
+          <p>That is what they all say about us</p>
+        </div>
+        <div class="column">
+          <h3>"I shouldn't have gone with their competitor."</h3>
+          <p>
+            <img src="assets/images/avatar/nan.jpg" class="ui avatar image"> <b>Nan</b> Chief Fun Officer Acme Toys
+          </p>
+        </div>
+      </div>
+    </div>
+  </section> -->
+
+  <section class="ui vertical stripe segment">
+    <div class="ui text container">
+      <h3 class="ui header" style="text-align: center;">Your wishes and suggestions...</h3>
+      <p style="text-align: center;"><img src="./static/lama-isolated-on-transparent-background-ai-generated-png.webp" width="256" /></p>
+      <!-- <p>Instead of focusing on content creation and hard work, we have learned how to master the art of doing nothing by providing massive amounts of whitespace and generic content that can seem massive, monolithic and worth your attention.</p>
+      <a class="ui large button">Read More</a>
+      <h4 class="ui horizontal header divider">
+        <a href="#">Case Studies</a>
+      </h4>
+      <h3 class="ui header">Did We Tell You About Our Bananas?</h3>
+      <p>Yes I know you probably disregarded the earlier boasts as non-sequitur filler content, but its really true. It took years of gene splicing and combinatory DNA research, but our bananas can really dance.</p>
+      <a class="ui large button">I'm Still Quite Interested</a> -->
+      <div id="disqus_thread"></div>
+      <script>
+        // See more at: https://disqus.com/admin/universalcode/#configuration-variables
+        var disqus_config = function () {
+          this.page.url = 'https://breakcorn.ru/'; // canonical URL variable
+          this.page.identifier = 0;                // page's unique identifier variable
+        };
+        (function() { // DON'T EDIT BELOW THIS LINE
+        var d = document, s = d.createElement('script');
+        s.src = 'https://breakcorn.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', + new Date());
+        (d.head || d.body).appendChild(s);
+        })();
+      </script>
+      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    </div>
+  </section>
+
+  <!-- <footer id="FOOTER" class="ui inverted vertical footer segment">
+    <div class="ui container">
+      <div class="ui stackable inverted divided equal height stackable grid">
+        <div class="three wide column">
+          <h4 class="ui inverted header">About</h4>
+          <div class="ui inverted link list">
+            <a href="#" class="item">Sitemap</a>
+            <a href="#" class="item">Contact Us</a>
+            <a href="#" class="item">Religious Ceremonies</a>
+            <a href="#" class="item">Gazebo Plans</a>
+          </div>
+        </div>
+        <div class="three wide column">
+          <h4 class="ui inverted header">Services</h4>
+          <div class="ui inverted link list">
+            <a href="#" class="item">Banana Pre-Order</a>
+            <a href="#" class="item">DNA FAQ</a>
+            <a href="#" class="item">How To Access</a>
+            <a href="#" class="item">Favorite X-Men</a>
+          </div>
+        </div>
+        <div class="seven wide column">
+          <h4 class="ui inverted header">Footer Header</h4>
+          <p>Extra space for a call to action inside the footer that could help re-engage users.</p>
+        </div>
+      </div>
+    </div>
+  </footer> -->
+</main>
+
+<div class="ui modal preferencies">
+  <i class="close icon"></i>
+  <div class="header">
+    <h2>Preferencies</h2>
+  </div>
+  <div class="image content">
+    <div class="image"><img src="/static/icon_settings.png" width="192" style="opacity: 0.6;" /></div>
+    <div class="description" style="width: 100%;">
+      <div>
+        <h3>Master Controls</h3>
+      </div>
+      <div class="ui divider"></div>
+      <div class="master-controls ui grid">
+        <div class="eight wide column" style="text-align: center;">
+          <label for="volume">VOL</label><br />
+          <input
+            type="range"
+            id="volume"
+            class="control-volume"
+            min="0"
+            max="2"
+            value="1"
+            list="gain-vals"
+            step="0.01"
+            data-action="volume"
+            />
+          <datalist id="gain-vals">
+            <option value="0" label="min"></option>
+            <option value="2" label="max"></option>
+          </datalist>
+        </div>
+        <div class="eight wide column" style="text-align: center;">
+          <label for="panner">PAN</label><br />
+          <input
+            type="range"
+            id="panner"
+            class="control-panner"
+            list="pan-vals"
+            min="-1"
+            max="1"
+            value="0"
+            step="0.01"
+            data-action="panner"
+            />
+          <datalist id="pan-vals">
+            <option value="-1" label="left"></option>
+            <option value="1" label="right"></option>
+          </datalist>
+          <button
+            data-playing="false"
+            class="controls-play"
+            role="switch"
+            aria-checked="false"
+            style="display: none;"
+            ><span>P/P</span>
+          </button>
+        </div>
+      </div>
+      <div class="ui divider"></div>
+      <div>
+        <h3>Compressor</h3>
+      </div>
+      <div class="ui divider"></div>
+      <div class="master-controls ui grid">
+        <div class="eight wide column" style="text-align: center;">
+          <div style="display: grid; grid-template-columns: auto auto auto;">
+            <div class="grid-item">
+              <span id="dial_threshold"></span>
+              <span id="number_threshold"></span><br />
+              <label>threshold</label>
+            </div>
+            <div class="grid-item">
+              <span id="dial_knee"></span>
+              <span id="number_knee"></span><br />
+              <label>knee</label>
+            </div>
+            <div class="grid-item">
+              <span id="dial_ratio"></span>
+              <span id="number_ratio"></span><br />
+              <label>ratio</label>
+            </div>
+            <div class="grid-item">
+              <span id="dial_attack"></span>
+              <span id="number_attack"></span><br />
+              <label>attack</label>
+            </div>
+            <div class="grid-item">
+              <span id="dial_release"></span>
+              <span id="number_release"></span><br />
+              <label>release</label>
+            </div>
+            <div class="grid-item"></div>
+          </div>
+        </div>
+        <div class="eight wide column" style="text-align: center;">
+          <p>Presets:</p>
+          <button id="button_setPreset_dynamicsCompressor_None">None</button>
+          <button id="button_setPreset_dynamicsCompressor_Low">Low</button>
+          <button id="button_setPreset_dynamicsCompressor_Medium">Medium</button>
+          <button id="button_setPreset_dynamicsCompressor_High">High</button>
+        </div>
+      </div>
+      <div class="ui divider"></div>
+      <div style="display: none;">
+        <button class="ui secondary button" id="localFileBut">Load local file</button>
+        <button class="ui secondary button" id="micSelect">Use Microphone</button>
+      </div>
+      <!-- <div class="ui divider"></div> -->
+      <div>
+        <h3>Butterchurn</h3>
+        <p><a href="//github.com/jberg/butterchurn">Butterchurn</a> is a WebGL implementation of the <a href="//www.geisswerks.com/milkdrop/">Milkdrop Visualizer</a></p>
+      </div>
+      <div class="ui divider"></div>
+      <div id="presetControls" class="ui grid">
+        <div class="six wide column">
+          <p>Preset:       </p>
+          <p>Random:       </p>
+          <p>Cycle:        </p>
+          <p>Cycle length: </p>
+        </div>
+        <div class="ten wide column" style="text-align: right;">
+          <p><select id="presetSelect"></select></p>
+          <p><input type="checkbox" id="presetRandom" checked="checked"></input></p>
+          <p><input type="checkbox" id="presetCycle" checked="checked"></input></p>
+          <p><input type="number" id="presetCycleLength" step="1" value="17" min="1"></input></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="actions">
+    <!-- <div class="ui button">Cancel</div> -->
+    <div class="ui button" onclick="$('.ui.modal').modal('hide');">OK</div>
+  </div>
+</div>
+
+<div class="ui modal comingSoon">
+  <div class="header">Information</div>
+  <div class="content">
+    <p>Coming soon...</p>
+  </div>
+  <div class="actions">
+    <div class="ui approve button">OK</div>
+  </div>
+</div>
+
+<script
+  src="//code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous" defer></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.js" crossorigin="anonymous" defer></script>
+<!-- <script src="../dist/components/form.js" defer></script> -->
+<!-- <script src="../dist/components/transition.js" defer></script> -->
+<!-- <script src="../dist/components/dropdown.js" defer></script> -->
+<!-- <script src="../dist/components/visibility.js" defer></script> -->
+<!-- <script src="../dist/components/sidebar.js" defer></script> -->
+<!-- <script src="../dist/components/transition.js" defer></script> -->
+
+<!-- <script type="text/javascript" src="../dist/butterchurn.js"></script> -->
+<script type="text/javascript" src="//unpkg.com/lodash" crossorigin="anonymous" defer></script>
+<script type="text/javascript" src="//unpkg.com/butterchurn" crossorigin="anonymous" defer></script>
+<script type="text/javascript" src="//unpkg.com/butterchurn-presets" crossorigin="anonymous" defer></script>
+<script type="text/javascript" src="//unpkg.com/butterchurn-presets/lib/butterchurnPresetsExtra.min.js" crossorigin="anonymous" defer></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/nexusui@latest/dist/NexusUI.js" crossorigin="anonymous" defer></script>
+<!-- <script type="text/javascript" src="//rawgit.com/taylorbf/Musicians-Toolkit/master/dist/NexusUI.js" crossorigin="anonymous" defer></script> -->
+<!-- <script id="dsq-count-scr" type="text/javascript" src="//breakcorn.disqus.com/count.js" defer></script> -->
+
+<script type="text/javascript" src="./static/js/main.js" defer></script>
+
+</body></html>
