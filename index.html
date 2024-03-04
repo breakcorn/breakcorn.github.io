@@ -22,19 +22,22 @@
 
 <div id="BG_FIXED" style="display: none;">
   <canvas id="canvas" style="width: 100vw; height: 100vh;"></canvas>
-<div class="wrapper">
-  <div class="triangle-wrap">
+  <div style="position: absolute; top: 48vh; left: 0; right: 0; margin: auto; max-height: 64px; color: #444; text-align: center; vertical-align: middle; font-size: 1.4rem;">
+    <span id="CURRENT_PLAYING_TITLE"></span>
+  </div>
+  <div class="logo-container">
+    <div class="glitch" data-text="BREAKCORN">BREAKCORN</div>
+    <div class="glow">BREAKCORN</div>
+    <p class="subtitle">GENERATIVE AUDIO STREAMS</p>
+  </div>
+  <div class="wrapper">
+    <div class="triangle-wrap">
       <div class="triangle triangle--main"></div>
       <div class="triangle triangle--1"></div>
       <div class="triangle triangle--2"></div>
       <div class="triangle triangle--3"></div>
-    <div class="triangle__text" data-text=""></div>
-  </div>
-</div>
-  <div class="logo-container">
-    <div class="glitch" data-text="BREAKCORN">BREAKCORN</div>
-    <!-- <div class="glow">BREAKCORN</div> -->
-    <p class="subtitle">GENERATIVE AUDIO STREAMS</p>
+      <div class="triangle__text" data-text=""></div>
+    </div>
   </div>
   <div class="scanlines"></div>
 </div>
@@ -48,6 +51,8 @@
     <!-- <a class="item">Careers</a> -->
     <a class="item" onclick="$('.ui.modal.settings').modal('show');">Settings</a>
     <a class="item" href="#disqus_thread">Comments</a>
+    <a class="item" href="https://www.radiomast.io/stream/0096c4fc-e4c2-4bdc-bce7-0419448040a8/listen.m3u">M3U</a>
+    <a class="item" href="https://www.radiomast.io/stream/0096c4fc-e4c2-4bdc-bce7-0419448040a8/listen.pls">PLS</a>
     <div class="right menu">
       <div class="item">
         <a class="ui button" onclick="$('.ui.modal.comingSoon').modal('show');">Log in</a>
@@ -59,22 +64,20 @@
   </div>
 </div>
 
-<div class="ui vertical inverted sidebar menu">
+<!-- <div class="ui vertical inverted sidebar menu">
   <a class="active item">Home</a>
   <a class="item">Work</a>
   <a class="item">Company</a>
   <a class="item">Careers</a>
   <a class="item">Login</a>
   <a class="item">Signup</a>
-</div>
+</div> -->
 
 <main class="pusher" style="background: none;">
   <header id="HEADER" class="ui inverted vertical masthead center aligned segment" style="background: none !important; background-color: none !important; width: 100vw; height: 100vh;">
     <div class="ui container">
       <div class="ui large secondary inverted pointing menu">
-        <a class="toc item">
-          <i class="sidebar icon"></i>
-        </a>
+        <!-- <a class="toc item"><i class="sidebar icon"></i></a> -->
         <!-- <a class="active item">Home</a> -->
         <!-- <a class="item">Work</a> -->
         <!-- <a class="item">Company</a> -->
@@ -84,6 +87,10 @@
         </div>
         <div class="item">
           <a class="ui inverted button" href="#disqus_thread">Comments</a>
+        </div>
+        <div class="item">
+          <a class="ui inverted button" href="https://www.radiomast.io/stream/0096c4fc-e4c2-4bdc-bce7-0419448040a8/listen.m3u">M3U</a>
+          <a class="ui inverted button" href="https://www.radiomast.io/stream/0096c4fc-e4c2-4bdc-bce7-0419448040a8/listen.pls">PLS</a>
         </div>
         <div class="right item">
           <a class="ui button" onclick="$('.ui.modal.comingSoon').modal('show');">Log in</a>
@@ -365,7 +372,7 @@
 <script type="text/javascript" src="//unpkg.com/butterchurn-presets/lib/butterchurnPresetsExtra.min.js" crossorigin="anonymous" defer></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/nexusui@latest/dist/NexusUI.js" crossorigin="anonymous" defer></script>
 <!-- <script type="text/javascript" src="//rawgit.com/taylorbf/Musicians-Toolkit/master/dist/NexusUI.js" crossorigin="anonymous" defer></script> -->
-<!-- <script id="dsq-count-scr" type="text/javascript" src="//breakcorn.disqus.com/count.js" defer></script> -->
+<script id="dsq-count-scr" type="text/javascript" src="//breakcorn.disqus.com/count.js" defer></script>
 
 <script type="text/javascript" src="./static/js/main.js" defer></script>
 

@@ -354,6 +354,16 @@ document.getElementById('button_setPreset_dynamicsCompressor_High').addEventList
   setPreset_dynamicsCompressor(-50.0, 30.0, 20.0, 0.003, 0.25)
 });
 
+function updateCurrentPlayingTitle(uri) { // https://stackoverflow.com/questions/8567114/how-can-i-make-an-ajax-call-without-jquery
+  const xhttp = new XMLHttpRequest();
+  xhttp.onload = function() { document.getElementById('CURRENT_PLAYING_TITLE').innerHTML = JSON.parse(this.responseText).icestats.source[0].title.slice(0, 512); }
+  xhttp.open("GET", uri, true);
+  xhttp.send();
+}
+setInterval(() => {
+  updateCurrentPlayingTitle('https://www.radiomast.io/stream/0096c4fc-e4c2-4bdc-bce7-0419448040a8/icecast/status-json.xsl')
+}, 1000*3);
+
 } else { alert('Requires browser support for WebGL 2 and Web Audio API.') }
 
 });
