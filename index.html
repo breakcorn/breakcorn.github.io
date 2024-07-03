@@ -54,6 +54,14 @@
     <a class="item" href="#disqus_thread">Comments</a>
     <a class="item" href="https://breakcorn.ru/static/playlists/listen.m3u">M3U</a>
     <a class="item" href="https://breakcorn.ru/static/playlists/listen.pls">PLS</a>
+    <a id="BTN_FAQ_2" class="item" href=>FAQ</a>
+    <script type="text/javascript">
+      document.getElementById('BTN_FAQ_2').onclick = function () { // https://habr.com/ru/articles/282880/
+        var otherWindow = window.open();
+        otherWindow.opener = null;
+        otherWindow.location = 'https://www.wikihow.com/Use-VLC-Media-Player-to-Listen-to-Internet-Radio';
+      }
+    </script>
     <div class="right menu">
       <div class="item">
         <a class="ui button" onclick="$('.ui.modal.comingSoon').modal('show');">Log in</a>
