@@ -4,7 +4,7 @@ set -e
 
 IFS='.' read -r -a array <<< "$(cat version)"
 array[2]="$((array[2] + 1))"
-version="${array[0]}.${array[1]}.${array[2]}"
+version="${array[0]}.${array[1]}.0"
 echo version > version
 
 git config --global user.name "breakcorn"
