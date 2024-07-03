@@ -1,19 +1,18 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BREAKCORN | Broadcast Stream Client Web Application</title>
-  <meta name="description" content="Breakcore / Digital Hardcore / IDM / Noise / Industrial" />
-  
-  <script type="text/javascript">if (location.protocol !== 'https:') { location.replace(`https:${location.href.substring(location.protocol.length)}`); }</script>
+<title>BREAKCORN | Broadcast Stream Client Web Application</title>
+<meta name="description" content="Breakcore / Digital Hardcore / IDM / Noise / Industrial" />
 
-  <!-- <link href="//fonts.googleapis.com/css?family=Oswald" rel="stylesheet" type="text/css" /> -->
-  <link href="//fonts.cdnfonts.com/css/pixel-calculon" rel="stylesheet" />
-  <link href="//fonts.cdnfonts.com/css/nonfiction" rel="stylesheet" />
+<script type="text/javascript">// if (location.protocol !== 'https:') { location.replace(`https:${location.href.substring(location.protocol.length)}`); }</script>
 
-  <link rel="stylesheet" type="text/css" href="./static/css/reset.min.css" />
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css" />
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-  <link rel="stylesheet" href="./static/css/main.css" />
-</head>
-<body>
+<!-- <link href="//fonts.googleapis.com/css?family=Oswald" rel="stylesheet" type="text/css" /> -->
+<link href="//fonts.cdnfonts.com/css/pixel-calculon" rel="stylesheet" />
+<link href="//fonts.cdnfonts.com/css/nonfiction" rel="stylesheet" />
+
+<link rel="stylesheet" type="text/css" href="./static/css/reset.min.css" />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css" />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+<link rel="stylesheet" href="./static/css/styles.css" />
+</head><body>
 
 <audio crossorigin="anonymous" id="player"><!-- autoplay="autoplay" https://qna.habr.com/q/1318536 -->
   <source src="https://audio-edge-kef8b.ams.s.radiomast.io/0096c4fc-e4c2-4bdc-bce7-0419448040a8" type="audio/mpeg">
@@ -21,25 +20,27 @@
 </audio>
 
 <div id="BG_FIXED" style="display: none;">
-  <canvas id="canvas" style="width: 100vw; height: 100vh;"></canvas>
-  <div style="position: absolute; top: 48vh; left: 0; right: 0; margin: auto; max-height: 64px; color: #444; text-align: center; vertical-align: middle; font-size: 1.4rem;">
-    <span id="CURRENT_PLAYING_TITLE"></span>
-  </div>
-  <div class="logo-container">
-    <div class="glitch" data-text="BREAKCORN">BREAKCORN</div>
-    <div class="glow">BREAKCORN</div>
-    <p class="subtitle">GENERATIVE AUDIO STREAMS</p>
-  </div>
-  <div class="wrapper">
-    <div class="triangle-wrap">
-      <div class="triangle triangle--main"></div>
-      <div class="triangle triangle--1"></div>
-      <div class="triangle triangle--2"></div>
-      <div class="triangle triangle--3"></div>
-      <div class="triangle__text" data-text=""></div>
+  <canvas id="CANVAS"></canvas><div id="NOISE" style="display: none"></div>
+  <div class="interface">
+    <div style="position: absolute; top: 48vh; left: 0; right: 0; margin: auto; max-height: 64px; color: #444; text-align: center; vertical-align: middle; font-size: 1.4rem;">
+      <span id="CURRENT_PLAYING_TITLE"></span>
     </div>
+    <div class="logo-container">
+      <div class="glitch" data-text="BREAKCORN">BREAKCORN</div>
+      <div class="glow">BREAKCORN</div>
+      <p class="subtitle">GENERATIVE AUDIO STREAMS</p>
+    </div>
+    <div class="wrapper">
+      <div class="triangle-wrap">
+        <div class="triangle triangle--main"></div>
+        <div class="triangle triangle--1"></div>
+        <div class="triangle triangle--2"></div>
+        <div class="triangle triangle--3"></div>
+        <div class="triangle__text" data-text=""></div>
+      </div>
+    </div>
+    <div id="SCANLINES"></div>
   </div>
-  <div class="scanlines"></div>
 </div>
 
 <!-- Following Menu -->
@@ -51,8 +52,8 @@
     <!-- <a class="item">Careers</a> -->
     <a class="item" onclick="$('.ui.modal.settings').modal('show');">Settings</a>
     <a class="item" href="#disqus_thread">Comments</a>
-    <a class="item" href="https://www.radiomast.io/stream/0096c4fc-e4c2-4bdc-bce7-0419448040a8/listen.m3u">M3U</a>
-    <a class="item" href="https://www.radiomast.io/stream/0096c4fc-e4c2-4bdc-bce7-0419448040a8/listen.pls">PLS</a>
+    <a class="item" href="https://breakcorn.ru/static/listen.m3u">M3U</a>
+    <a class="item" href="https://breakcorn.ru/static/listen.pls">PLS</a>
     <div class="right menu">
       <div class="item">
         <a class="ui button" onclick="$('.ui.modal.comingSoon').modal('show');">Log in</a>
@@ -63,6 +64,8 @@
     </div>
   </div>
 </div>
+
+<div id="PRELOADER" class="ui active dimmer"><div class="ui text loader">Loading...</div></div>
 
 <!-- <div class="ui vertical inverted sidebar menu">
   <a class="active item">Home</a>
@@ -75,7 +78,7 @@
 
 <main class="pusher" style="background: none;">
   <header id="HEADER" class="ui inverted vertical masthead center aligned segment" style="background: none !important; background-color: none !important; width: 100vw; height: 100vh;">
-    <div class="ui container">
+    <div class="ui container interface">
       <div class="ui large secondary inverted pointing menu">
         <!-- <a class="toc item"><i class="sidebar icon"></i></a> -->
         <!-- <a class="active item">Home</a> -->
@@ -89,8 +92,18 @@
           <a class="ui inverted button" href="#disqus_thread">Comments</a>
         </div>
         <div class="item">
-          <a class="ui inverted button" href="https://www.radiomast.io/stream/0096c4fc-e4c2-4bdc-bce7-0419448040a8/listen.m3u">M3U</a>
-          <a class="ui inverted button" href="https://www.radiomast.io/stream/0096c4fc-e4c2-4bdc-bce7-0419448040a8/listen.pls">PLS</a>
+          <a class="ui inverted button" href="https://breakcorn.ru/static/listen.m3u">M3U</a>
+          <a class="ui inverted button" href="https://breakcorn.ru/static/listen.pls">PLS</a>
+        </div>
+        <div class="item">
+          <a id="BTN_FAQ" class="ui inverted button" href=>FAQ</a>
+          <script type="text/javascript">
+            document.getElementById('BTN_FAQ').onclick = function () { // https://habr.com/ru/articles/282880/
+              var otherWindow = window.open();
+              otherWindow.opener = null;
+              otherWindow.location = 'https://www.wikihow.com/Use-VLC-Media-Player-to-Listen-to-Internet-Radio';
+            }
+          </script>
         </div>
         <div class="right item">
           <a class="ui button" onclick="$('.ui.modal.comingSoon').modal('show');">Log in</a>
@@ -98,7 +111,7 @@
         </div>
       </div>
     </div>
-    <div class="ui text container">
+    <div class="ui text container interface">
       <!-- <h1 class="ui inverted header">Imagine-a-Company</h1> -->
       <!-- <h2>Do whatever you want when you want to.</h2> -->
       <div class="audio-player" style="z-index: 100; display: none;">
@@ -208,10 +221,10 @@
   </footer> -->
 </main>
 
-<div class="ui modal settings">
+<div class="ui modal settings" id="M3387483">
   <i class="close icon"></i>
   <div class="header">
-    <h2>settings</h2>
+    <h2>Settings</h2>
   </div>
   <div class="image content">
     <div class="image"><img src="/static/icon_settings.png" width="192" style="opacity: 0.6;" /></div>
@@ -337,9 +350,8 @@
       </div>
     </div>
   </div>
-  <div class="actions">
-    <!-- <div class="ui button">Cancel</div> -->
-    <div class="ui button" onclick="$('.ui.modal').modal('hide');">OK</div>
+  <div class="actions" style="text-align: center;">
+    <button class="ui button" onclick="$('.ui.modal').modal('hide');">OK</button>
   </div>
 </div>
 
@@ -353,27 +365,32 @@
   </div>
 </div>
 
-<script
-  src="//code.jquery.com/jquery-3.1.1.min.js"
-  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-  crossorigin="anonymous" defer></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.js" crossorigin="anonymous" defer></script>
-<!-- <script src="../dist/components/form.js" defer></script> -->
-<!-- <script src="../dist/components/transition.js" defer></script> -->
-<!-- <script src="../dist/components/dropdown.js" defer></script> -->
-<!-- <script src="../dist/components/visibility.js" defer></script> -->
-<!-- <script src="../dist/components/sidebar.js" defer></script> -->
-<!-- <script src="../dist/components/transition.js" defer></script> -->
+<div id="BTN_HIDE_INTERFACE" class="icon" style="cursor: pointer; background-color: transparent; position: absolute; bottom: 3vh; left: 0; right: 0; margin: auto; max-width: 96px; max-height: 64px; color: #FFF; text-align: center; font-size: 2rem; vertical-align: middle;">
+  <i id="ICON_BTN_HIDE_INTERFACE" class="eye icon"></i>
+</div>
+<style type="text/css">
+  /* #BTN_HIDE_INTERFACE:hover { color: #000 !important; } */
+  /* #BTN_HIDE_INTERFACE:hover { background-color: #FFF !important; } */
+</style>
 
-<!-- <script type="text/javascript" src="../dist/butterchurn.js"></script> -->
-<script type="text/javascript" src="//unpkg.com/lodash" crossorigin="anonymous" defer></script>
-<script type="text/javascript" src="//unpkg.com/butterchurn" crossorigin="anonymous" defer></script>
-<script type="text/javascript" src="//unpkg.com/butterchurn-presets" crossorigin="anonymous" defer></script>
-<script type="text/javascript" src="//unpkg.com/butterchurn-presets/lib/butterchurnPresetsExtra.min.js" crossorigin="anonymous" defer></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/nexusui@latest/dist/NexusUI.js" crossorigin="anonymous" defer></script>
-<!-- <script type="text/javascript" src="//rawgit.com/taylorbf/Musicians-Toolkit/master/dist/NexusUI.js" crossorigin="anonymous" defer></script> -->
-<script id="dsq-count-scr" type="text/javascript" src="//breakcorn.disqus.com/count.js" defer></script>
+<!-- <script src="//code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script> -->
+<script src="/static/vendor/jquery-3.1.1.min.js"></script>
+<script src="/static/vendor/semantic.min.js"></script><!-- <script src="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.js" crossorigin="anonymous"></script> -->
+<!-- <script src="../dist/components/form.js"></script> -->
+<!-- <script src="../dist/components/transition.js"></script> -->
+<!-- <script src="../dist/components/dropdown.js"></script> -->
+<!-- <script src="../dist/components/visibility.js"></script> -->
+<!-- <script src="../dist/components/sidebar.js"></script> -->
+<!-- <script src="../dist/components/transition.js"></script> -->
 
-<script type="text/javascript" src="./static/js/main.js" defer></script>
+<script type="text/javascript" src="/static/vendor/lodash.js"></script><!-- <script type="text/javascript" src="/static/vendor///unpkg.com/lodash" crossorigin="anonymous"></script> -->
+<script type="text/javascript" src="/static/vendor/butterchurn.js"></script><!-- <script type="text/javascript" src="butterchurn.js" crossorigin="anonymous"></script> -->
+<script type="text/javascript" src="/static/vendor/butterchurnPresets.min.js"></script><!-- <script type="text/javascript" src="//unpkg.com/butterchurn-presets" crossorigin="anonymous"></script> -->
+<script type="text/javascript" src="/static/vendor/butterchurnPresetsExtra.min.js"></script><!-- <script type="text/javascript" src="//unpkg.com/butterchurn-presets/lib/butterchurnPresetsExtra.min.js" crossorigin="anonymous"></script> -->
+<script type="text/javascript" src="/static/vendor/NexusUI.js"></script><!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/nexusui@latest/dist/NexusUI.js" crossorigin="anonymous"></script> -->
+<!-- <script type="text/javascript" src="//rawgit.com/taylorbf/Musicians-Toolkit/master/dist/NexusUI.js" crossorigin="anonymous"></script> -->
+<!-- <script id="dsq-count-scr" type="text/javascript" src="//breakcorn.disqus.com/count.js"></script> -->
+
+<script type="text/javascript" src="./static/js/main.js"></script>
 
 </body></html>

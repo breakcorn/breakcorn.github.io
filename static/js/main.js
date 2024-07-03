@@ -1,3 +1,7 @@
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+
 $(document).ready(function() {
   $('.masthead').visibility({ // fix menu when passed
     once: false,
@@ -5,7 +9,91 @@ $(document).ready(function() {
     onBottomPassedReverse: function() { $('.fixed.menu').transition('fade out'); }
   });
   $('.ui.sidebar').sidebar('attach events', '.toc.item'); // create sidebar and attach to menu open
+  let interval1, interval2,
+      el_scanlines = document.getElementById('SCANLINES'),
+      el_noise = document.getElementById('NOISE'),
+      variation;
+
+  setInterval(() => {
+    clearInterval(interval1)
+    if (getRandomInt(16) > 14) {
+      interval1 = setInterval(() => {
+        if (getRandomInt(8) > 5) { el_scanlines.classList.add('accent'); }
+        else                     { el_scanlines.classList.remove('accent'); }
+        if (getRandomInt(8) > 5) { el_noise.style.display = 'block'; }
+        else                     { el_noise.style.display = 'none'; }
+      }, 8 + getRandomInt(9));
+    }
+    el_noise.style.display = 'none';
+  }, 500);
+  
+  setInterval(() => {
+    clearInterval(interval2)
+    if (getRandomInt(16) > 14) {
+      interval2 = setInterval(() => {
+        if (getRandomInt(8) > 5) {
+          switch(getRandomInt(5)) {
+            case 0: variation = 'a'; break;
+            case 1: variation = 'b'; break;
+            case 2: variation = 'c'; break;
+            case 3: variation = 'd'; break;
+            case 4: variation = 'e'; break;
+          }
+          el_scanlines.classList.add('accent', 'variations', variation);
+        }
+        else { el_scanlines.classList.remove('accent', 'variations', 'a', 'b', 'c', 'd', 'e'); }
+      }, 8 + getRandomInt(9));
+    }
+    el_scanlines.classList.remove('accent');
+  }, 500);
+
 });
+
+let obj_BTN_HIDE_INTERFACE = { 'element': document.getElementById('BTN_HIDE_INTERFACE'), 'hover': false, 'state': true }
+obj_BTN_HIDE_INTERFACE.element.addEventListener('mouseover', () => { obj_BTN_HIDE_INTERFACE.hover = true;  });
+obj_BTN_HIDE_INTERFACE.element.addEventListener('mouseout',  () => { obj_BTN_HIDE_INTERFACE.hover = false; });
+
+function show_BTN_HIDE_INTERFACE() {
+  animation = 'animate__fadeIn';
+  obj_BTN_HIDE_INTERFACE.element.style.display = 'block';
+  obj_BTN_HIDE_INTERFACE.element.style.setProperty('--animate-duration', '1s');
+  obj_BTN_HIDE_INTERFACE.element.classList.add('animate__animated', 'animate__fadeIn');
+}
+
+function hide_BTN_HIDE_INTERFACE() {
+  animation = 'animate__fadeOut';
+  obj_BTN_HIDE_INTERFACE.element.style.display = 'block';
+  obj_BTN_HIDE_INTERFACE.element.style.setProperty('--animate-duration', '1s');
+  obj_BTN_HIDE_INTERFACE.element.classList.add('animate__animated', 'animate__fadeOut');
+}
+
+var animation = 'animate__fadeIn';
+
+obj_BTN_HIDE_INTERFACE.element.addEventListener('animationend', () => {
+  obj_BTN_HIDE_INTERFACE.element.classList.remove('animate__animated', animation);
+  if (animation == 'animate__fadeOut') {    
+    obj_BTN_HIDE_INTERFACE.element.style.display = 'none';
+    y = false;
+  }
+});
+
+var x, y;
+document.addEventListener('mousemove', () => {
+  if (!obj_BTN_HIDE_INTERFACE.hover) { // if (!obj_BTN_HIDE_INTERFACE.hover && !obj_BTN_HIDE_INTERFACE.state) {
+    if (!y) { y = true; show_BTN_HIDE_INTERFACE(); }
+    if (x) { clearTimeout(x) }; x = setTimeout(() => { hide_BTN_HIDE_INTERFACE(); }, 750);
+  } else {
+    clearTimeout(x)
+    obj_BTN_HIDE_INTERFACE.element.classList.remove('animate__animated', 'animate__fadeIn', 'animate__fadeOut'); // Preventive.
+    obj_BTN_HIDE_INTERFACE.element.style.display = 'block';
+  }
+});
+
+
+$('#BTN_HIDE_INTERFACE').click(() => { if (obj_BTN_HIDE_INTERFACE.state) {
+  obj_BTN_HIDE_INTERFACE.state = false; $('#BTN_HIDE_INTERFACE').html('<i id="ICON_BTN_HIDE_INTERFACE" class="low vision icon"></i>'); $('.interface').hide(); } else {
+  obj_BTN_HIDE_INTERFACE.state = true;  $('#BTN_HIDE_INTERFACE').html('<i id="ICON_BTN_HIDE_INTERFACE" class="eye icon"></i>');        $('.interface').show();
+}});
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API
 
@@ -13,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() { // Analogue of $(docu
 
 // console.clear(); console.log('Hallo World!');
 
-const canvas = document.getElementById('canvas'); canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+const canvas = document.getElementById('CANVAS'); canvas.width = window.innerWidth; canvas.height = window.innerHeight;
 const audioElement = document.querySelector('audio');
 const button_PlayOrPause = document.querySelector('.controls-play');
 const volumeControl = document.querySelector('[data-action="volume"]');
@@ -140,6 +228,7 @@ function connectToAudioAnalyzer(sourceNode) {
 function startRenderer() {
   requestAnimationFrame(() => startRenderer());
   visualizer.render();
+  $('#PRELOADER').hide();
 }
 
 function playBufferSource(buffer) {
