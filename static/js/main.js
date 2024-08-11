@@ -2,10 +2,23 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
-$(document).ready(function() {
+function openLinkInOtherWindow(link) { // https://habr.com/ru/articles/282880/
+  let otherWindow = window.open();
+  otherWindow.opener = null;
+  otherWindow.location = link;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  console.log('DOM fully loaded and parsed');
+
+  let linkToFAQ = 'https://www.wikihow.com/Use-VLC-Media-Player-to-Listen-to-Internet-Radio'
+  document.getElementById('BTN_FAQ_1').addEventListener('click', () => openLinkInOtherWindow(linkToFAQ));
+  document.getElementById('BTN_FAQ_2').addEventListener('click', () => openLinkInOtherWindow(linkToFAQ));
+
   $('.masthead').visibility({ // fix menu when passed
     once: false,
-    onBottomPassed: function() { $('.fixed.menu').transition('fade in'); },
+    onBottomPassed:        function() { $('.fixed.menu').transition('fade in');  },
     onBottomPassedReverse: function() { $('.fixed.menu').transition('fade out'); }
   });
   $('.ui.sidebar').sidebar('attach events', '.toc.item'); // create sidebar and attach to menu open
@@ -67,7 +80,7 @@ function hide_BTN_HIDE_INTERFACE() {
   obj_BTN_HIDE_INTERFACE.element.classList.add('animate__animated', 'animate__fadeOut');
 }
 
-var animation = 'animate__fadeIn';
+let animation = 'animate__fadeIn';
 
 obj_BTN_HIDE_INTERFACE.element.addEventListener('animationend', () => {
   obj_BTN_HIDE_INTERFACE.element.classList.remove('animate__animated', animation);
@@ -77,7 +90,7 @@ obj_BTN_HIDE_INTERFACE.element.addEventListener('animationend', () => {
   }
 });
 
-var x, y;
+let x, y;
 document.addEventListener('mousemove', () => {
   if (!obj_BTN_HIDE_INTERFACE.hover) { // if (!obj_BTN_HIDE_INTERFACE.hover && !obj_BTN_HIDE_INTERFACE.state) {
     if (!y) { y = true; show_BTN_HIDE_INTERFACE(); }
@@ -103,7 +116,8 @@ document.addEventListener('DOMContentLoaded', function() { // Analogue of $(docu
 
 const canvas = document.getElementById('CANVAS'); canvas.width = window.innerWidth; canvas.height = window.innerHeight;
 const audioElement = document.querySelector('audio');
-const button_PlayOrPause = document.querySelector('.controls-play');
+const sourceElements = Array.from(audioElement.querySelectorAll('source')); let currentSourceElementIndex = 0;
+const button_PlaySwitch = document.querySelector('.controls-play');
 const volumeControl = document.querySelector('[data-action="volume"]');
 const inputCheckbox_presetCycle = document.getElementById('presetCycle');
 const inputNumber_presetCycleLength = document.getElementById('presetCycleLength');
@@ -116,45 +130,46 @@ const audioApiSupported = !!(window.AudioContext || window.webkitAudioContext);
 
 if (webGL2Supported && audioApiSupported) {
 
-var audioCtx;
-var source;
-var gainNode;
-var analyser;
-var dynamicsCompressorNode;
-var threshold = 0.0;
-var knee = 30.0;
-var ratio = 1.0;
-var attack = 0.003;
-var release = 0.25;
+let audioCtx,
+    source,
+    gainNode,
+    analyser,
+    dynamicsCompressorNode,
+    threshold = 0.0,
+    knee = 30.0,
+    ratio = 1.0,
+    attack = 0.003,
+    release = 0.25;
 
-var visualizer = null;
-var rendering = false;
-var sourceNode = null;
-var delayedAudible = null;
-var cycleInterval = null;
-var presets = {};
-var presetKeys = [];
-var presetIndexHistory = [];
-var presetIndex = Math.floor(Math.random() * presetKeys.length);
-var presetCycle = inputCheckbox_presetCycle.checked;
-var presetCycleLength = 15000;
-var presetRandom = inputCheckbox_presetRandom.checked;
-var defaultBlendTime = 5.7; // the number of seconds to blend presets
+let visualizer = null,
+    rendering = false,
+    sourceNode = null,
+    delayedAudible = null,
+    cycleInterval = null,
+    presets = {},
+    presetKeys = [],
+    presetIndexHistory = [],
+    presetIndex = Math.floor(Math.random() * presetKeys.length),
+    presetCycle = inputCheckbox_presetCycle.checked,
+    presetCycleLength = 15000,
+    presetRandom = inputCheckbox_presetRandom.checked,
+    defaultBlendTime = 5.7; // the number of seconds to blend preset;
 
 if (window.butterchurnPresets)      { Object.assign(presets, butterchurnPresets.getPresets());      }
 if (window.butterchurnPresetsExtra) { Object.assign(presets, butterchurnPresetsExtra.getPresets()); }
 presets = _(presets).toPairs().sortBy(([k, v]) => k.toLowerCase()).fromPairs().value();
 presetKeys = _.keys(presets);
 
-for(var i = 0; i < presetKeys.length; i++) {
-  var opt = document.createElement('option');
+for(let i = 0; i < presetKeys.length; i++) {
+  let opt = document.createElement('option');
   opt.innerHTML = presetKeys[i].substring(0,60) + (presetKeys[i].length > 60 ? '...' : '');
   opt.value = i;
   select_presetSelect.appendChild(opt);
 }
 
-function initPlayer() {
-  audioCtx = new AudioContext();
+function initPlayer() { // Инициализация плеера
+  audioElement.src = sourceElements[currentSourceElementIndex].src; // Начальная загрузка первого источника
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)(); // audioCtx = new AudioContext();
   source = new MediaElementAudioSourceNode(audioCtx, { mediaElement: audioElement });
   gainNode = new GainNode(audioCtx); // create the node that controls the volume.
   analyser = audioCtx.createAnalyser(); // https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Visualizations_with_Web_Audio_API
@@ -187,34 +202,56 @@ function initPlayer() {
   startRenderer();
 }
 
-button_PlayOrPause.addEventListener('click', () => { // play/pause audio
+button_PlaySwitch.addEventListener('click', () => { // Добавляем обработчик на кнопку Play/Pause
   if (!audioCtx) { initPlayer(); }
   if (audioCtx.state === 'suspended') { audioCtx.resume(); } // check if context is in suspended state (autoplay policy)
-  if (button_PlayOrPause.dataset.playing === 'false') {
+  if (button_PlaySwitch.dataset.playing === 'false') {
     audioElement.play();
-    button_PlayOrPause.dataset.playing = 'true';
-  } else if (button_PlayOrPause.dataset.playing === 'true') { // if track is playing pause it
+    button_PlaySwitch.dataset.playing = 'true';
+  } else if (button_PlaySwitch.dataset.playing === 'true') { // if track is playing pause it
     audioElement.pause();
-    button_PlayOrPause.dataset.playing = 'false';
+    button_PlaySwitch.dataset.playing = 'false';
   }
-  let state = button_PlayOrPause.getAttribute('aria-checked') === 'true' ? true : false; // toggle the state between play and not playing
-  button_PlayOrPause.setAttribute('aria-checked', state ? 'false' : 'true');
+  let state = button_PlaySwitch.getAttribute('aria-checked') === 'true' ? true : false; // toggle the state between play and not playing
+  button_PlaySwitch.setAttribute('aria-checked', state ? 'false' : 'true');
 
   audioCtx.resume();
-  visualizer.connectAudio(source); // startRenderer();
+  visualizer.connectAudio(source); // startRenderer(); // Подключаем аудио к визуализатору
 }, false );
 
 $('.audio-player').click(function() {
-  button_PlayOrPause.click();
+  button_PlaySwitch.click();
   if (!audioElement.paused) {
     // audioElement.currentTime = 0.0; // restarts the whole audio from the beginning
   }
 });
 
+function switchSource() { // Функция для аварийной смены источника на резервный
+  currentSourceElementIndex = (currentSourceElementIndex + 1) % sourceElements.length;
+  audioElement.src = sourceElements[currentSourceElementIndex].src;
+  audioElement.load();
+  audioElement.play();
+}
+
+// Обработчик ошибки воспроизведения
+audioElement.addEventListener('error', () => {
+  console.log('Ошибка воспроизведения, переключаемся на следующий источник.');
+  switchSource();
+});
+
 audioElement.addEventListener('ended', () => { // if track ends
-  button_PlayOrPause.dataset.playing = 'false';
-  button_PlayOrPause.setAttribute('aria-checked', 'false');
+  switchSource();
+  // button_PlaySwitch.dataset.playing = 'false';
+  // button_PlaySwitch.setAttribute('aria-checked', 'false');
 }, false);
+
+setInterval(() => { // Плановая попытка вернуться на главный источник, в случае аварийной замены источника вещания (`switchSource()`)
+  if (currentSourceElementIndex != 0) {
+    audioElement.src = sourceElements[0].src;
+    currentSourceElementIndex = 0;
+    audioElement.load(); audioElement.play();
+  }
+}, 1000 * 60 * 13); // after each 13th minute
 
 function connectToAudioAnalyzer(sourceNode) {
   if (delayedAudible) { delayedAudible.disconnect(); }
@@ -242,7 +279,7 @@ function playBufferSource(buffer) {
 
 function loadLocalFiles(files, index = 0) {
   audioCtx.resume();
-  var reader = new FileReader();
+  let reader = new FileReader();
   reader.onload = (event) => {
     audioCtx.decodeAudioData(event.target.result, (buf) => {
       playBufferSource(buf);
@@ -255,19 +292,19 @@ function loadLocalFiles(files, index = 0) {
       }, buf.duration * 1000);
     });
   };
-  var file = files[index];
+  let file = files[index];
   reader.readAsArrayBuffer(file);
 }
 
 function connectMicAudio(sourceNode, audioCtx) {
   audioCtx.resume();
-  var gainNode = audioCtx.createGain(); gainNode.gain.value = 1.25; sourceNode.connect(gainNode);
+  let gainNode = audioCtx.createGain(); gainNode.gain.value = 1.25; sourceNode.connect(gainNode);
   visualizer.connectAudio(gainNode); startRenderer();
 }
 
 function nextPreset(bt = defaultBlendTime) {
   presetIndexHistory.push(presetIndex);
-  var numPresets = presetKeys.length;
+  let numPresets = presetKeys.length;
   if (presetRandom) { presetIndex = Math.floor(Math.random() * presetKeys.length); }
   else              { presetIndex = (presetIndex + 1) % numPresets; }
   visualizer.loadPreset(presets[presetKeys[presetIndex]], bt);
@@ -275,7 +312,7 @@ function nextPreset(bt = defaultBlendTime) {
 }
 
 function prevPreset(bt = defaultBlendTime) {
-  var numPresets = presetKeys.length;
+  let numPresets = presetKeys.length;
   if (presetIndexHistory.length > 0) { presetIndex = presetIndexHistory.pop(); }
   else                               { presetIndex = ((presetIndex - 1) + numPresets) % numPresets; }
   visualizer.loadPreset(presets[presetKeys[presetIndex]], bt);
@@ -289,8 +326,8 @@ function restartCycleInterval() {
 
 document.addEventListener('keydown', (e) => { // https://www.toptal.com/developers/keycode/table
   if      (e.which === 32 || e.which === 39) { nextPreset(5.7); } // Spacebar  || ArrowRight
-  else if (e.which === 8  || e.which === 37) { prevPreset(0.0);   } // Backspace || ArrowLeft
-  else if (e.which === 72)                   { nextPreset(0.0);   } // KeyH
+  else if (e.which === 8  || e.which === 37) { prevPreset(0.0); } // Backspace || ArrowLeft
+  else if (e.which === 72)                   { nextPreset(0.0); } // KeyH
 });
 
 select_presetSelect.addEventListener('change', (e) => {
@@ -314,7 +351,7 @@ inputCheckbox_presetRandom.addEventListener('change', (e) => {
 });
 
 document.getElementById('localFileBut').addEventListener('click', (e) => {
-  var fileSelector = document.createElement('input');
+  let fileSelector = document.createElement('input');
   fileSelector.setAttribute('type', 'file');
   fileSelector.setAttribute('accept', 'audio/*');
   fileSelector.setAttribute('multiple', 'multiple');
@@ -325,7 +362,7 @@ document.getElementById('localFileBut').addEventListener('click', (e) => {
 document.getElementById('micSelect').addEventListener('click', (e) => {
   navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) { // https://developer.mozilla.org/ru/docs/Web/API/MediaDevices/getUserMedia
     // debug: https://stackoverflow.com/questions/60957829/navigator-mediadevices-is-undefined
-    var micSourceNode = audioCtx.createMediaStreamSource(stream);
+    let micSourceNode = audioCtx.createMediaStreamSource(stream);
     connectMicAudio(micSourceNode, audioCtx);
   }).catch(function (err) { console.log('Error getting audio stream from getUserMedia'); });
 });
@@ -342,7 +379,7 @@ audioPlayer.style.display = 'block';
 audioElement.addEventListener('playing',  (event) => {
   $('.audio-player-button').attr('src', './static/Pause-Icon.svg');
   audioPlayer.classList.add('animate__animated', 'animate__pulse', 'animate__infinite');
-  button_PlayOrPause.dataset.playing = 'true';
+  button_PlaySwitch.dataset.playing = 'true';
   statusText.innerText = 'playing';
   statusText.setAttribute('data-text', 'playing');
   triangle.style.animationName = 'triangleMove2';
@@ -350,7 +387,7 @@ audioElement.addEventListener('playing',  (event) => {
 audioElement.addEventListener('pause', (event) => {
   $('.audio-player-button').attr('src', './static/Play-Icon.svg');
   audioPlayer.classList.remove('animate__animated', 'animate__pulse', 'animate__infinite');
-  button_PlayOrPause.dataset.playing = 'false';
+  button_PlaySwitch.dataset.playing = 'false';
   statusText.innerText = 'pause';
   statusText.setAttribute('data-text', 'pause');
   triangle.style.animationName = 'none';
@@ -361,7 +398,7 @@ glitch.style.display = 'block';
 glitch.style.setProperty('--animate-duration', '1s');
 glitch.classList.add('animate__animated', 'animate__fadeIn');
 
-var dial_threshold = new Nexus.Dial('#dial_threshold', {
+let dial_threshold = new Nexus.Dial('#dial_threshold', {
   'size': [75,75],
   'interaction': 'vertical', // "radial", "vertical", or "horizontal"
   'mode': 'relative', // "absolute" or "relative"
@@ -370,10 +407,10 @@ var dial_threshold = new Nexus.Dial('#dial_threshold', {
   'step': 0.1,
   'value': -50
 })
-var number_threshold = new Nexus.Number('#number_threshold')
+let number_threshold = new Nexus.Number('#number_threshold')
 number_threshold.link(dial_threshold)
 dial_threshold.on('change', function(v) { dynamicsCompressorNode.threshold.setValueAtTime(v, audioCtx.currentTime); })
-var dial_knee = new Nexus.Dial('#dial_knee', {
+let dial_knee = new Nexus.Dial('#dial_knee', {
   'size': [75,75],
   'interaction': 'vertical', // "radial", "vertical", or "horizontal"
   'mode': 'relative', // "absolute" or "relative"
@@ -382,10 +419,10 @@ var dial_knee = new Nexus.Dial('#dial_knee', {
   'step': 0.1,
   'value': 40.0
 })
-var number_knee = new Nexus.Number('#number_knee')
+let number_knee = new Nexus.Number('#number_knee')
 number_knee.link(dial_knee)
 dial_knee.on('change', function(v) { dynamicsCompressorNode.knee.setValueAtTime(v, audioCtx.currentTime); })
-var dial_ratio = new Nexus.Dial('#dial_ratio', {
+let dial_ratio = new Nexus.Dial('#dial_ratio', {
   'size': [75,75],
   'interaction': 'vertical', // "radial", "vertical", or "horizontal"
   'mode': 'relative', // "absolute" or "relative"
@@ -394,10 +431,10 @@ var dial_ratio = new Nexus.Dial('#dial_ratio', {
   'step': 0.1,
   'value': 12.0
 })
-var number_ratio = new Nexus.Number('#number_ratio')
+let number_ratio = new Nexus.Number('#number_ratio')
 number_ratio.link(dial_ratio)
 dial_ratio.on('change', function(v) { dynamicsCompressorNode.ratio.setValueAtTime(v, audioCtx.currentTime); })
-var dial_attack = new Nexus.Dial('#dial_attack', {
+let dial_attack = new Nexus.Dial('#dial_attack', {
   'size': [75,75],
   'interaction': 'vertical', // "radial", "vertical", or "horizontal"
   'mode': 'relative', // "absolute" or "relative"
@@ -406,10 +443,10 @@ var dial_attack = new Nexus.Dial('#dial_attack', {
   'step': 0.001,
   'value': 0.0
 })
-var number_attack = new Nexus.Number('#number_attack')
+let number_attack = new Nexus.Number('#number_attack')
 number_attack.link(dial_attack)
 dial_attack.on('change', function(v) { dynamicsCompressorNode.attack.setValueAtTime(v, audioCtx.currentTime); })
-var dial_release = new Nexus.Dial('#dial_release', {
+let dial_release = new Nexus.Dial('#dial_release', {
   'size': [75,75],
   'interaction': 'vertical', // "radial", "vertical", or "horizontal"
   'mode': 'relative', // "absolute" or "relative"
@@ -418,7 +455,7 @@ var dial_release = new Nexus.Dial('#dial_release', {
   'step': 0.001,
   'value': 0.25
 })
-var number_release = new Nexus.Number('#number_release')
+let number_release = new Nexus.Number('#number_release')
 number_release.link(dial_release)
 dial_release.on('change', function(v) { dynamicsCompressorNode.release.setValueAtTime(v, audioCtx.currentTime); })
 
@@ -443,15 +480,15 @@ document.getElementById('button_setPreset_dynamicsCompressor_High').addEventList
   setPreset_dynamicsCompressor(-50.0, 30.0, 20.0, 0.003, 0.25)
 });
 
-function updateCurrentPlayingTitle(uri) { // https://stackoverflow.com/questions/8567114/how-can-i-make-an-ajax-call-without-jquery
-  const xhttp = new XMLHttpRequest();
-  xhttp.onload = function() { document.getElementById('CURRENT_PLAYING_TITLE').innerHTML = JSON.parse(this.responseText).icestats.source[0].title.slice(0, 512); }
-  xhttp.open("GET", uri, true);
-  xhttp.send();
-}
-setInterval(() => {
-  updateCurrentPlayingTitle('https://www.radiomast.io/stream/0096c4fc-e4c2-4bdc-bce7-0419448040a8/icecast/status-json.xsl')
-}, 1000*3);
+// function updateCurrentPlayingTitle(uri) { // https://stackoverflow.com/questions/8567114/how-can-i-make-an-ajax-call-without-jquery
+//   const xhttp = new XMLHttpRequest();
+//   xhttp.onload = function() { document.getElementById('CURRENT_PLAYING_TITLE').innerHTML = JSON.parse(this.responseText).icestats.source[0].title.slice(0, 512); }
+//   xhttp.open("GET", uri, true);
+//   xhttp.send();
+// }
+// setInterval(() => {
+//   updateCurrentPlayingTitle('https://www.radiomast.io/stream/0096c4fc-e4c2-4bdc-bce7-0419448040a8/icecast/status-json.xsl')
+// }, 1000*3);
 
 } else { alert('Requires browser support for WebGL 2 and Web Audio API.') }
 

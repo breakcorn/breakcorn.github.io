@@ -15,8 +15,14 @@
 </head><body>
 
 <audio crossorigin="anonymous" id="player"><!-- autoplay="autoplay" https://qna.habr.com/q/1318536 -->
-  <source src="https://audio-edge-kef8b.ams.s.radiomast.io/0096c4fc-e4c2-4bdc-bce7-0419448040a8" type="audio/mpeg">
-  <source src="https://stream.breakcorn.ru/main" type="audio/mpeg">
+  <!-- <source src="https://audio-edge-kef8b.ams.s.radiomast.io/0096c4fc-e4c2-4bdc-bce7-0419448040a8" type="audio/mpeg"> -->
+  <source src="https://stream.breakcorn.ru/main"     type="audio/mpeg" />
+  <source src="https://stream.breakcorn.ru/mezzo"    type="audio/mpeg" />
+  <source src="https://radio.mosco.win/play"         type="audio/mpeg" />
+  <source src="http://94.130.113.214:8000/chill"     type="audio/mpeg" />
+  <source src="http://94.130.113.214:8000/dubtechno" type="audio/mpeg" />
+  <source src="http://94.130.113.214:8000/prog"      type="audio/mpeg" />
+  <source src="http://94.130.113.214:8000/schizoid"  type="audio/mpeg" />
 </audio>
 
 <div id="BG_FIXED" style="display: none;">
@@ -52,16 +58,10 @@
     <!-- <a class="item">Careers</a> -->
     <a class="item" onclick="$('.ui.modal.settings').modal('show');">Settings</a>
     <a class="item" href="#disqus_thread">Comments</a>
-    <a class="item" href="https://breakcorn.ru/static/playlists/listen.m3u">M3U</a>
     <a class="item" href="https://breakcorn.ru/static/playlists/listen.pls">PLS</a>
+    <a class="item" href="https://breakcorn.ru/static/playlists/listen.m3u">M3U</a>
+    <a class="item" href="https://breakcorn.ru/static/playlists/listen.m3u8">M3U8</a>
     <a id="BTN_FAQ_2" class="item" href=>FAQ</a>
-    <script type="text/javascript">
-      document.getElementById('BTN_FAQ_2').onclick = function () { // https://habr.com/ru/articles/282880/
-        var otherWindow = window.open();
-        otherWindow.opener = null;
-        otherWindow.location = 'https://www.wikihow.com/Use-VLC-Media-Player-to-Listen-to-Internet-Radio';
-      }
-    </script>
     <div class="right menu">
       <div class="item">
         <a class="ui button" onclick="$('.ui.modal.comingSoon').modal('show');">Log in</a>
@@ -104,14 +104,7 @@
           <a class="ui inverted button" href="https://breakcorn.ru/static/playlists/listen.pls">PLS</a>
         </div>
         <div class="item">
-          <a id="BTN_FAQ" class="ui inverted button" href=>FAQ</a>
-          <script type="text/javascript">
-            document.getElementById('BTN_FAQ').onclick = function () { // https://habr.com/ru/articles/282880/
-              var otherWindow = window.open();
-              otherWindow.opener = null;
-              otherWindow.location = 'https://www.wikihow.com/Use-VLC-Media-Player-to-Listen-to-Internet-Radio';
-            }
-          </script>
+          <a id="BTN_FAQ_1" class="ui inverted button" href=>FAQ</a>
         </div>
         <div class="right item">
           <a class="ui button" onclick="$('.ui.modal.comingSoon').modal('show');">Log in</a>
