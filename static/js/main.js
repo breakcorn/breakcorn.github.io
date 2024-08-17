@@ -123,6 +123,7 @@ const inputCheckbox_presetCycle = document.getElementById('presetCycle');
 const inputNumber_presetCycleLength = document.getElementById('presetCycleLength');
 const inputCheckbox_presetRandom = document.getElementById('presetRandom');
 const select_presetSelect = document.getElementById('presetSelect');
+const select_sourceServerSelect = document.getElementById('SOURCE_SERVER_SELECT');
 
 let gl; try { gl = canvas.getContext("webgl2"); } catch (x) { gl = null; }
 const webGL2Supported = !!gl;
@@ -168,6 +169,8 @@ for(let i = 0; i < presetKeys.length; i++) {
 }
 
 function initPlayer() { // Инициализация плеера
+  presetSourceElementIndex = select_sourceServerSelect.value;
+  currentSourceElementIndex = presetSourceElementIndex;
   audioElement.src = sourceElements[currentSourceElementIndex].src; // Начальная загрузка первого источника
   audioCtx = new (window.AudioContext || window.webkitAudioContext)(); // audioCtx = new AudioContext();
   source = new MediaElementAudioSourceNode(audioCtx, { mediaElement: audioElement });
@@ -226,6 +229,14 @@ $('.audio-player').click(function() {
   }
 });
 
+document.getElementById('SOURCE_SERVER_SELECT').addEventListener('change', function() {
+  presetSourceElementIndex = select_sourceServerSelect.value;
+  audioElement.src = sourceElements[presetSourceElementIndex].src;
+  currentSourceElementIndex = presetSourceElementIndex;
+  audioElement.load(); audioElement.play();
+  console.log('Selected source server: ', presetSourceElementIndex);
+});
+
 function switchSource() { // Функция для аварийной смены источника на резервный
   currentSourceElementIndex = (currentSourceElementIndex + 1) % sourceElements.length;
   audioElement.src = sourceElements[currentSourceElementIndex].src;
@@ -246,9 +257,9 @@ audioElement.addEventListener('ended', () => { // if track ends
 }, false);
 
 setInterval(() => { // Плановая попытка вернуться на главный источник, в случае аварийной замены источника вещания (`switchSource()`)
-  if (currentSourceElementIndex != 0) {
-    audioElement.src = sourceElements[0].src;
-    currentSourceElementIndex = 0;
+  if (currentSourceElementIndex != presetSourceElementIndex) {
+    audioElement.src = sourceElements[presetSourceElementIndex].src;
+    currentSourceElementIndex = presetSourceElementIndex;
     audioElement.load(); audioElement.play();
   }
 }, 1000 * 60 * 13); // after each 13th minute

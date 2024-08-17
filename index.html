@@ -12,6 +12,12 @@
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css" />
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 <link rel="stylesheet" href="./static/css/styles.css" />
+<style type="text/css">
+  section { width: 100vw; }
+</style>
+<!--
+  https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter
+-->
 </head><body>
 
 <audio crossorigin="anonymous" id="player"><!-- autoplay="autoplay" https://qna.habr.com/q/1318536 -->
@@ -26,7 +32,7 @@
 </audio>
 
 <div id="BG_FIXED" style="display: none;">
-  <canvas id="CANVAS"></canvas><div id="NOISE" style="display: none"></div>
+  <canvas id="CANVAS" class="invrtd" style=""></canvas><div id="NOISE" style="display: none"></div>
   <div class="interface">
     <div style="position: absolute; top: 48vh; left: 0; right: 0; margin: auto; max-height: 64px; color: #444; text-align: center; vertical-align: middle; font-size: 1.4rem;">
       <span id="CURRENT_PLAYING_TITLE"></span>
@@ -73,16 +79,72 @@
   </div>
 </div>
 
-<div id="PRELOADER" class="ui active dimmer"><div class="ui text loader">Loading...</div></div>
+<div id="PRELOADER" class="ui active dimmer invrtd">
+  <div class="ui text loader">Loading...</div>
+  <noscript style="max-width: 512px; width: 100%;">
+    <h1 class="animate__pulse animate__animated animate__infinite">BREAKCORN</h1>
+    
+    <p>
+      <audio controls="controls" crossorigin="anonymous"><!-- autoplay="autoplay" https://qna.habr.com/q/1318536 -->
+        <!-- <source src="https://audio-edge-kef8b.ams.s.radiomast.io/0096c4fc-e4c2-4bdc-bce7-0419448040a8" type="audio/mpeg"> -->
+        <source src="https://stream.breakcorn.ru/main"     type="audio/mpeg" />
+        <source src="https://stream.breakcorn.ru/mezzo"    type="audio/mpeg" />
+        <source src="https://radio.mosco.win/play"         type="audio/mpeg" />
+        <source src="http://94.130.113.214:8000/chill"     type="audio/mpeg" />
+        <source src="http://94.130.113.214:8000/dubtechno" type="audio/mpeg" />
+        <source src="http://94.130.113.214:8000/prog"      type="audio/mpeg" />
+        <source src="http://94.130.113.214:8000/schizoid"  type="audio/mpeg" />
+      </audio>
+    </p>
+    <p>Your browser doesn't support the JavaScript.</p>
+    <p>Based on <a href="https://stream.breakcorn.ru">Icecast2</a></p>
+    <style>
+      body { overflow: hidden; }
+      #PRELOADER { width: 100vw; }
+      #PRELOADER.invrtd { background-color: #FEF; }
+      #PRELOADER noscript img { margin: 0 auto 16px; }
+      #PRELOADER noscript h1 {
+        /* font-family: 'Pixel Calculon', sans-serif; */
+        font-family: 'Nonfiction', sans-serif;
+        font-style: italic;
+        font-size: 4.5rem;
+        color: #f7AAe1;
+        text-align: center;
+        background: #FFFFFF;
+        text-shadow: 1px 3px 0 #969696, 1px 13px 5px #aba8a8;
+      }
+      #PRELOADER noscript audio {
+        width: 100%;
+        height: 50px;
+        background-color: #FCF;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
 
-<!-- <div class="ui vertical inverted sidebar menu">
-  <a class="active item">Home</a>
-  <a class="item">Work</a>
-  <a class="item">Company</a>
-  <a class="item">Careers</a>
-  <a class="item">Login</a>
-  <a class="item">Signup</a>
-</div> -->
+      #PRELOADER noscript audio::-webkit-media-controls-panel {
+        background-color: #FCF;
+      }
+
+      #PRELOADER noscript audio::-webkit-media-controls-play-button,
+      #PRELOADER noscript audio::-webkit-media-controls-pause-button,
+      #PRELOADER noscript audio::-webkit-media-controls-mute-button,
+      #PRELOADER noscript audio::-webkit-media-controls-volume-slider {
+        background-color: #f7AAe1;
+        border-radius: 50%;
+      }
+
+      #PRELOADER noscript audio::-webkit-media-controls-current-time-display,
+      #PRELOADER noscript audio::-webkit-media-controls-time-remaining-display {
+        color: #f754e1;
+      }
+      #PRELOADER noscript p { color: #FFF; }
+      #PRELOADER.invrtd noscript p { color: #000; }
+      .loader { display: none !important; }
+    </style>
+  </noscript>
+</div>
+
+
 
 <main class="pusher" style="background: none;">
   <header id="HEADER" class="ui inverted vertical masthead center aligned segment" style="background: none !important; background-color: none !important; width: 100vw; height: 100vh;">
@@ -125,43 +187,9 @@
     </div>
   </header>
 
-  <!-- <section class="ui vertical stripe segment">
-    <div class="ui middle aligned stackable grid container">
-      <div class="row">
-        <div class="eight wide column">
-          <h3 class="ui header">We Help Companies and Companions</h3>
-          <p>We can give your company superpowers to do things that they never thought possible. Let us delight your customers and empower your needs...through pure data analytics.</p>
-          <h3 class="ui header">We Make Bananas That Can Dance</h3>
-          <p>Yes that's right, you thought it was the stuff of dreams, but even bananas can be bioengineered.</p>
-        </div>
-        <div class="six wide right floated column">
-          <img src="static/images/wireframe/white-image.png" class="ui large bordered rounded image">
-        </div>
-      </div>
-      <div class="row">
-        <div class="center aligned column">
-          <a class="ui huge button">Check Them Out</a>
-        </div>
-      </div>
-    </div>
-  </section> -->
+  
 
-  <!-- <section class="ui vertical stripe quote segment">
-    <div class="ui equal width stackable internally celled grid">
-      <div class="center aligned row">
-        <div class="column">
-          <h3>"What a Company"</h3>
-          <p>That is what they all say about us</p>
-        </div>
-        <div class="column">
-          <h3>"I shouldn't have gone with their competitor."</h3>
-          <p>
-            <img src="assets/images/avatar/nan.jpg" class="ui avatar image"> <b>Nan</b> Chief Fun Officer Acme Toys
-          </p>
-        </div>
-      </div>
-    </div>
-  </section> -->
+  
 
   <section class="ui vertical stripe segment">
     <div class="ui text container">
@@ -193,34 +221,7 @@
     </div>
   </section>
 
-  <!-- <footer id="FOOTER" class="ui inverted vertical footer segment">
-    <div class="ui container">
-      <div class="ui stackable inverted divided equal height stackable grid">
-        <div class="three wide column">
-          <h4 class="ui inverted header">About</h4>
-          <div class="ui inverted link list">
-            <a href="#" class="item">Sitemap</a>
-            <a href="#" class="item">Contact Us</a>
-            <a href="#" class="item">Religious Ceremonies</a>
-            <a href="#" class="item">Gazebo Plans</a>
-          </div>
-        </div>
-        <div class="three wide column">
-          <h4 class="ui inverted header">Services</h4>
-          <div class="ui inverted link list">
-            <a href="#" class="item">Banana Pre-Order</a>
-            <a href="#" class="item">DNA FAQ</a>
-            <a href="#" class="item">How To Access</a>
-            <a href="#" class="item">Favorite X-Men</a>
-          </div>
-        </div>
-        <div class="seven wide column">
-          <h4 class="ui inverted header">Footer Header</h4>
-          <p>Extra space for a call to action inside the footer that could help re-engage users.</p>
-        </div>
-      </div>
-    </div>
-  </footer> -->
+  
 </main>
 
 <div class="ui modal settings" id="M3387483">
@@ -319,10 +320,29 @@
         </div>
         <div class="eight wide column" style="text-align: center;">
           <p>Presets:</p>
-          <button id="button_setPreset_dynamicsCompressor_None">None</button>
-          <button id="button_setPreset_dynamicsCompressor_Low">Low</button>
-          <button id="button_setPreset_dynamicsCompressor_Medium">Medium</button>
-          <button id="button_setPreset_dynamicsCompressor_High">High</button>
+          <button class="ui secondary button dynamicsCompressorPresetButton" id="button_setPreset_dynamicsCompressor_None">None</button>
+          <button class="ui secondary button dynamicsCompressorPresetButton" id="button_setPreset_dynamicsCompressor_Low">Low</button>
+          <button class="ui secondary button dynamicsCompressorPresetButton" id="button_setPreset_dynamicsCompressor_Medium">Medium</button>
+          <button class="ui secondary button dynamicsCompressorPresetButton" id="button_setPreset_dynamicsCompressor_High">High</button>
+          <style type="text/css">
+            #M3387483 .dynamicsCompressorPresetButton {
+              padding: .5em 1em;
+              background-color: cyan; color: #000;
+            }
+            #M3387483 .dynamicsCompressorPresetButton.active {
+              background-color: #000; color: #FFF;
+            }
+          </style>
+          <script type="text/javascript">
+            document.querySelectorAll('#M3387483 .dynamicsCompressorPresetButton').forEach(button => {
+              button.addEventListener('click', function() {
+                // Удаляем класс 'active' у всех кнопок
+                document.querySelectorAll('#M3387483 .dynamicsCompressorPresetButton').forEach(btn => btn.classList.remove('active'));
+                // Добавляем класс 'active' к нажатой кнопке
+                this.classList.add('active');
+              });
+            });
+          </script>
         </div>
       </div>
       <div class="ui divider"></div>
@@ -333,7 +353,7 @@
       <!-- <div class="ui divider"></div> -->
       <div>
         <h3>Butterchurn</h3>
-        <p><a href="//github.com/jberg/butterchurn">Butterchurn</a> is a WebGL implementation of the <a href="//www.geisswerks.com/milkdrop/">Milkdrop Visualizer</a></p>
+        <p><a href="#" onclick="openLinkInOtherWindow('https://github.com/jberg/butterchurn')">Butterchurn</a> is a WebGL implementation of the <a href="#" onclick="openLinkInOtherWindow('https://www.geisswerks.com/milkdrop/')">Milkdrop Visualizer</a>.Is licensed under the MIT License — see the  <a href="#" onclick="">LICENSE</a> file for details.</p>
       </div>
       <div class="ui divider"></div>
       <div id="presetControls" class="ui grid">
@@ -344,11 +364,25 @@
           <p>Cycle length: </p>
         </div>
         <div class="ten wide column" style="text-align: right;">
-          <p><select id="presetSelect"></select></p>
+          <p><select id="presetSelect" class="ui dropdown"></select></p>
           <p><input type="checkbox" id="presetRandom" checked="checked"></input></p>
           <p><input type="checkbox" id="presetCycle" checked="checked"></input></p>
           <p><input type="number" id="presetCycleLength" step="1" value="17" min="1"></input></p>
         </div>
+      </div>
+      <div class="ui divider"></div>
+      <div>
+        <h3>Source Server</h3>
+        <select class="ui dropdown" id="SOURCE_SERVER_SELECT" style="width: 100%;">
+          <option value="0" selected="selected">Breakcorn Radio - Main Stream</option>
+          <option value="1">Breakcorn Radio - Mezzo</option>
+          <option value="2">Breakcore Mashcore Radio.Mosco.win</option>
+          <option value="3">Nautic Radio Groningen</option>
+          <option value="4">Radio Schizoid - PsyTrance</option>
+          <option value="5">Radio Schizoid - Chillout / Ambient</option>
+          <option value="5">Radio Schizoid - Dub Techno</option>
+          <option value="5">Radio Schizoid - Progressive Psy</option>
+        </select>
       </div>
     </div>
   </div>
