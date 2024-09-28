@@ -1,7 +1,23 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BREAKCORN | Broadcast Stream Client Web Application</title>
 <meta name="description" content="Breakcore / Digital Hardcore / IDM / Noise / Industrial" />
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript" >
+   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+   m[i].l=1*new Date();
+   for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+   k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+   (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
 
+   ym(98488070, "init", {
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true,
+        webvisor:true
+   });
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/98488070" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
 <script type="text/javascript">// if (location.protocol !== 'https:') { location.replace(`https:${location.href.substring(location.protocol.length)}`); }</script>
 
 <!-- <link href="//fonts.googleapis.com/css?family=Oswald" rel="stylesheet" type="text/css" /> -->
@@ -13,7 +29,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 <link rel="stylesheet" href="./static/css/styles.css" />
 <style type="text/css">
-  section { width: 100vw; }
+  
 </style>
 <!--
   https://developer.mozilla.org/en-US/docs/Web/CSS/backdrop-filter
@@ -82,63 +98,11 @@
 <div id="PRELOADER" class="ui active dimmer invrtd">
   <div class="ui text loader">Loading...</div>
   <noscript style="max-width: 512px; width: 100%;">
-    <h1 class="animate__pulse animate__animated animate__infinite">BREAKCORN</h1>
-    
-    <p>
-      <audio controls="controls" crossorigin="anonymous"><!-- autoplay="autoplay" https://qna.habr.com/q/1318536 -->
-        <!-- <source src="https://audio-edge-kef8b.ams.s.radiomast.io/0096c4fc-e4c2-4bdc-bce7-0419448040a8" type="audio/mpeg"> -->
-        <source src="https://stream.breakcorn.ru/main"     type="audio/mpeg" />
-        <source src="https://stream.breakcorn.ru/mezzo"    type="audio/mpeg" />
-        <source src="https://radio.mosco.win/play"         type="audio/mpeg" />
-        <source src="http://94.130.113.214:8000/chill"     type="audio/mpeg" />
-        <source src="http://94.130.113.214:8000/dubtechno" type="audio/mpeg" />
-        <source src="http://94.130.113.214:8000/prog"      type="audio/mpeg" />
-        <source src="http://94.130.113.214:8000/schizoid"  type="audio/mpeg" />
-      </audio>
-    </p>
-    <p>Your browser doesn't support the JavaScript.</p>
-    <p>Based on <a href="https://stream.breakcorn.ru">Icecast2</a></p>
+    <iframe src="/noscript?theme=light" width="512" height="256" frameborder="no" sandbox="allow-top-navigation" seamless="seamless">Your browser does not support floating frames!</iframe>
     <style>
       body { overflow: hidden; }
       #PRELOADER { width: 100vw; }
       #PRELOADER.invrtd { background-color: #FEF; }
-      #PRELOADER noscript img { margin: 0 auto 16px; }
-      #PRELOADER noscript h1 {
-        /* font-family: 'Pixel Calculon', sans-serif; */
-        font-family: 'Nonfiction', sans-serif;
-        font-style: italic;
-        font-size: 4.5rem;
-        color: #f7AAe1;
-        text-align: center;
-        background: #FFFFFF;
-        text-shadow: 1px 3px 0 #969696, 1px 13px 5px #aba8a8;
-      }
-      #PRELOADER noscript audio {
-        width: 100%;
-        height: 50px;
-        background-color: #FCF;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-      }
-
-      #PRELOADER noscript audio::-webkit-media-controls-panel {
-        background-color: #FCF;
-      }
-
-      #PRELOADER noscript audio::-webkit-media-controls-play-button,
-      #PRELOADER noscript audio::-webkit-media-controls-pause-button,
-      #PRELOADER noscript audio::-webkit-media-controls-mute-button,
-      #PRELOADER noscript audio::-webkit-media-controls-volume-slider {
-        background-color: #f7AAe1;
-        border-radius: 50%;
-      }
-
-      #PRELOADER noscript audio::-webkit-media-controls-current-time-display,
-      #PRELOADER noscript audio::-webkit-media-controls-time-remaining-display {
-        color: #f754e1;
-      }
-      #PRELOADER noscript p { color: #FFF; }
-      #PRELOADER.invrtd noscript p { color: #000; }
       .loader { display: none !important; }
     </style>
   </noscript>
@@ -389,6 +353,9 @@
   <div class="actions" style="text-align: center;">
     <button class="ui button" onclick="$('.ui.modal').modal('hide');">OK</button>
   </div>
+  <style type="text/css">
+    #M3387483 section { width: 100vw; }
+  </style>
 </div>
 
 <div class="ui modal comingSoon">
